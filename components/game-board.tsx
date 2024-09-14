@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import DiceRoller from './dice-roller'
 import { DifficultyOption } from '@/types/game-types'  // Adjust the import path as needed
+import MuteButton from './mute-button';
 
 const tileColors = {
   yellow: 'bg-yellow-400',
@@ -150,6 +151,7 @@ export function GameBoard({ difficulty }: GameBoardProps) {
       <div className="mt-8">
         {!gameEnded && <DiceRoller onRoll={handleDiceRoll} />}
       </div>
+      <MuteButton />
     </Card>
   )
 }
