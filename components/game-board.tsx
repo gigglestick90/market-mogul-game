@@ -10,6 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import DiceRoller from './dice-roller'
 import { DifficultyOption } from '@/types/game-types'  // Adjust the import path as needed
 import MuteButton from './mute-button';
+import { Button } from "@/components/ui/button"
 
 const tileColors = {
   yellow: 'bg-yellow-400',
@@ -117,6 +118,14 @@ export function GameBoard({ difficulty }: GameBoardProps) {
     setInvestmentValue(newInvestmentValue)
   }
 
+  const handleRestart = () => {
+    setPlayerPosition(0);
+    setCurrentEvent(tiles[0].event);
+    setInvestmentValue(0);
+    setPlayerAge(20);
+    setGameEnded(false);
+  };
+
   return (
     <Card className="p-8 bg-gradient-to-br from-purple-500 to-pink-500">
       <h1 className="text-4xl font-bold text-center mb-8 text-white">Market Mogul</h1>
@@ -152,6 +161,21 @@ export function GameBoard({ difficulty }: GameBoardProps) {
         {!gameEnded && <DiceRoller onRoll={handleDiceRoll} />}
       </div>
       <MuteButton />
+      {gameEnded && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8 flex justify-center"
+        >
+          <Button
+            onClick={handleRestart}
+            className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full font-semibold text-lg transition duration-300 transform hover:scale-105"
+          >
+            Restart Game
+          </Button>
+        </motion.div>
+      )}
     </Card>
   )
 }
