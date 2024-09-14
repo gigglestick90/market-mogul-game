@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from './ui/button';
 import { AnimatedBackground } from './animated-background';
+import { useState, useEffect, useRef } from 'react';
+import MuteButton from './mute-button'; // We'll create this component next
 
 interface DifficultyOption {
   label: string;
@@ -20,6 +22,33 @@ interface WelcomeScreenProps {
 }
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
+  const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    audioRef.current = new Audio('/music/Stock-Market-Rap.mp3');
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.5; // Set volume to 50%
+    audioRef.current.play().catch(error => {
+      console.error('Audio playback failed:', error);
+      setIsMuted(true); // Ensure muted state if autoplay fails
+    });
+  }, []);
+
+  const toggleAudio = () => {
+    if (audioRef.current) {
+      if (audioRef.current.paused) {
+        audioRef.current.play().catch(error => {
+          console.error('Audio playback failed:', error);
+          // Optionally show a message to the user about enabling audio
+        });
+      } else {
+        audioRef.current.pause();
+      }
+      setIsMuted(!isMuted);
+    }
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center">
       <AnimatedBackground />
@@ -38,6 +67,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
           ))}
         </div>
       </div>
+      <MuteButton isMuted={isMuted} onClick={toggleAudio} />
     </div>
   );
 };
